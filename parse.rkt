@@ -42,24 +42,14 @@
 (define (produce-theorem x y)
   (letrec
     ((produce-lines
-       (lambda (in out atom)
+       (lambda (in out)
          (if (zero? in)
-           (reverse (cons atom out))
-           (produce-lines (- in 1) (cons '- out) atom))))
-     (produce-beginning
-       (lambda (in out)
-         (produce-lines in out 'p)))
-     (produce-middle
-       (lambda (in out)
-         (produce-lines in out 'q)))
-     (produce-ending
-       (lambda (a b)
-         (produce-lines (- (+ a b) 1) '() '-))))
+           (reverse out)
+           (produce-lines (- in 1) (cons '- out))))))
     (flatten
-      (cons
-        (produce-beginning x '())
-        (cons
-          (produce-middle y '())
-          (cons
-            (produce-ending x y) '()))))))
+      (list (produce-lines x '())
+            'p
+            (produce-lines y '())
+            'q
+            (produce-lines (+ x y) '())))))
 
