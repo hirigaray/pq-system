@@ -44,7 +44,7 @@
     ((produce-lines
        (lambda (in out)
          (if (zero? in)
-           (reverse out)
+           out
            (produce-lines (- in 1) (cons '- out))))))
     (flatten
       (list (produce-lines x '())
