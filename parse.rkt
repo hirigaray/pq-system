@@ -51,5 +51,6 @@
             'p
             (produce-lines y '())
             'q
-            (produce-lines (+ x y) '())))))
+            (produce-lines x '())
+            (produce-lines y '())))))
 
