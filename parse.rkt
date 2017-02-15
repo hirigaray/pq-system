@@ -41,16 +41,12 @@
            out
            (produce-lines (- in 1) (cons '- out))))))
     (flatten
-      (list (produce-lines x '())
-            'p
-            (produce-lines y '())
-            'q
-            (produce-lines x '())
-            (produce-lines y '())))))
+      (list (produce-lines x '()) 'p
+            (produce-lines y '()) 'q
+            (produce-lines x '()) (produce-lines y '())))))
 
 ; Check if a theorem is valid
 (define (valid-theorem? t)
   (equal? (+ (collect-start t)
              (collect-middle t))
           (collect-ending t)))
-
