@@ -1,17 +1,11 @@
 #lang racket
 
 (provide
-  valid-theorem?
   collect-start
   collect-middle
   collect-ending
-  produce-theorem)
-
-; Check if a theorem is valid
-(define (valid-theorem? t)
-  (equal? (+ (collect-start t)
-             (collect-middle t))
-          (collect-ending t)))
+  produce-theorem
+  valid-theorem?)
 
 ; Returns the numeric value of the theorem until p
 (define (collect-start t)
@@ -53,4 +47,10 @@
             'q
             (produce-lines x '())
             (produce-lines y '())))))
+
+; Check if a theorem is valid
+(define (valid-theorem? t)
+  (equal? (+ (collect-start t)
+             (collect-middle t))
+          (collect-ending t)))
 
