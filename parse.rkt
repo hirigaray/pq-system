@@ -7,46 +7,45 @@
   produce-theorem
   valid-theorem?)
 
-; Returns the numeric value of the theorem until p
+; Returns the hyphens in subsection of the theorem until p
 (define (collect-start t)
-  (let aux ((in t) (out 0))
+  (let aux ((in t) (out '()))
     (cond
       [(null? in) '()]
       [(equal? 'p (car in)) out]
-      [else (aux (cdr in) (+ 1 out))])))
+      [else (aux (cdr in) (cons '- out))])))
 
-; Returns the numeric value of the middle of theorem until q
+; Returns the hyphens in subsection of the theorem from p until q
 (define (collect-middle t)
-  (let aux ((in t) (out 0))
+  (let aux ((in t) (out '()))
     (cond
       [(null? in) '()]
-      [(equal? 'p (car in)) (aux (cdr in 0))]
+      [(equal? 'p (car in)) (aux (cdr in) '())]
       [(equal? 'q (car in)) out]
-      [else (aux (cdr in (+ 1 out)))])))
+      [else (aux (cdr in) (cons '- out))])))
 
-; Returns the numeric value of the ending part of the theorem
+; Returns the hyphens in subsection of the theorem from q onwards
 (define (collect-ending t)
-  (let aux ((in t) (out 0))
+  (let aux ((in t) (out '()))
     (cond
       [(null? in) out]
-      [(equal? 'q (car in)) (aux (cdr in) 0)]
-      [else (aux (cdr in) (+ 1 out))])))
+      [(equal? 'q (car in)) (aux (cdr in) '())]
+      [else (aux (cdr in) (cons '- out))])))
+
+(define (produce-lines x)
+   (let aux ((in x) (out '()))
+     (if (zero? in)
+       out
+       (aux (sub1 in) (cons '- out)))))
 
 ; Produces a valid theorem
 (define (produce-theorem x y)
-  (letrec
-    ((produce-lines
-       (lambda (in out)
-         (if (zero? in)
-           out
-           (produce-lines (- in 1) (cons '- out))))))
-    (flatten
-      (list (produce-lines x '()) 'p
-            (produce-lines y '()) 'q
-            (produce-lines x '()) (produce-lines y '())))))
+  (append (produce-lines x)
+          (cons 'p (produce-lines y))
+          (cons 'q (produce-lines x)) (produce-lines y)))
 
 ; Check if a theorem is valid
 (define (valid-theorem? t)
-  (equal? (+ (collect-start t)
-             (collect-middle t))
+  (equal? (append (collect-start t)
+                  (collect-middle t))
           (collect-ending t)))
